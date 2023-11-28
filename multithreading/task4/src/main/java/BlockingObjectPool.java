@@ -29,10 +29,11 @@ public class BlockingObjectPool {
    */
   public void take(Object object) throws InterruptedException {
     if (this.pool.offer(object)) {
-      System.out.println("Object successfully added to pool");
+      System.out.printf("Object successfully added to pool:%s\n", object);
     }
     this.pool.put(object);
   }
+
 
 }
 

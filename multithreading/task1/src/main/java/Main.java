@@ -12,7 +12,5 @@ public class Main {
 
     System.out.println("Java version: " + System.getProperty("java.version"));
     System.out.println("Execution time:" + (endTime - startTime));
-
   }
-
 }

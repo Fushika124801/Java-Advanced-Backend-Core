@@ -4,7 +4,6 @@ import model.Currency;
 import service.ExchangeService;
 import service.impl.ExchangeServiceImpl;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -12,11 +11,7 @@ import java.util.concurrent.Executors;
 
 public class CurrencyExchanger {
 
-  public static void main(String[] args) throws IOException {
-//    LogManager.getLogManager()
-//        // where is "logging.properties" file?
-//        .readConfiguration(CurrencyExchanger.class.getResourceAsStream("/logging.properties"));
-
+  public static void main(String[] args) {
     AccountDaoInfo accountInfoDAO = new AccountDaoInfo();
     List<Account> allAccounts = accountInfoDAO.findAll();
     ExchangeService exchangeOperationService = new ExchangeServiceImpl();
