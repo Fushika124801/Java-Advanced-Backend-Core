@@ -16,5 +16,6 @@
 
   <modules>
     <module>multithreading</module>
+    <module>reactive</module>
   </modules>
 </project>
