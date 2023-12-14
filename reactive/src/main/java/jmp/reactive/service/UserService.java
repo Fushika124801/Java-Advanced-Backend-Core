@@ -21,26 +21,23 @@ public class UserService implements SmartLifecycle {
   public void start() {
     userClient.getUsers()
         .log()
-        .subscribe(
-            new BaseSubscriber<User>() {
+        .subscribe(new BaseSubscriber<User>() {
+          private int count = 0;
+          private int limit = 20;
 
-              int processed;
-              final int limit = 20;
+          @Override
+          protected void hookOnSubscribe(Subscription subscription) {
+            request(limit);
+          }
 
-              @Override
-              protected void hookOnSubscribe(Subscription subscription) {
-                subscription.request(limit);
-              }
-
-              @Override
-              protected void hookOnNext(User value) {
-                if (++processed >= limit) {
-                  processed = 0;
-                  repository.save(value);
-                  request(limit);
-                }
-              }
-            });
+          @Override
+          protected void hookOnNext(User user) {
+            repository.save(user).subscribe();
+            if (++count % limit == 0) {
+              request(limit);
+            }
+          }
+        });
   }
 
   @Override

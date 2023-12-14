@@ -14,7 +14,6 @@ import reactor.core.publisher.Flux;
 public class UserClient {
 
   private final WebClient webClient;
-  private final UserRepository userRepository;
 
   public Flux<User> getUsers() {
     return webClient.get().uri(uri -> uri.path("/users").build())

@@ -14,7 +14,6 @@ public class UserApiRouter {
 
   @Bean
   public RouterFunction<ServerResponse> routes(UserApiHandler handler) {
-
     RequestPredicate getUserByName = RequestPredicates
         .GET("/api/v1/users")
         .and(RequestPredicates.accept(MediaType.APPLICATION_JSON));
