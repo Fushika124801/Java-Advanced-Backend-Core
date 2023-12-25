@@ -1,13 +1,13 @@
 package epam.com.generator;
 
 
-import epam.com.generator.generator.TemplateGenerator;
-import org.junit.jupiter.api.BeforeEach;
+import epam.com.FileOutputTestsExtension;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
-import org.junit.jupiter.api.condition.DisabledIf;
+import org.junit.jupiter.api.condition.DisabledOnOs;
+import org.junit.jupiter.api.condition.OS;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
-@ExtendWith(MockitoExtension.class)
+@ExtendWith({MockitoExtension.class, FileOutputTestsExtension.class})
 class TemplateGeneratorTest {
 
   @InjectMocks
@@ -36,17 +36,13 @@ class TemplateGeneratorTest {
   @Spy
   private List<String> emptyParams;
 
-  @BeforeEach
-  public void init() {
-    when(emptyParams.isEmpty()).thenReturn(true);
-  }
-
   @Test
   @Tag("ConsoleModeTest")
-  @DisabledIf("java.lang.System.getProperty('os.name').toLowerCase().contains('mac')")
+  @DisabledOnOs(OS.MAC)
   void createTemplateInConsoleMode_Ok() {
     String expected = "I wrote you John because Happy New Year";
     when(console.readLine()).thenReturn("title=Happy New Year,who=John");
+    when(emptyParams.isEmpty()).thenReturn(true);
 
     String actual = templateGenerator.createTemplate(emptyParams);
 
@@ -58,6 +54,7 @@ class TemplateGeneratorTest {
   @ValueSource(strings = {"", "title=Happy New Year", "who=John", "sawr"})
   void createTemplateInConsoleMode_ProvidedWrongPlaceholderValue_ThrowsException(String input) {
     when(console.readLine()).thenReturn(input);
+    when(emptyParams.isEmpty()).thenReturn(true);
 
     assertThrows(IllegalArgumentException.class,
         () -> templateGenerator.createTemplate(emptyParams));

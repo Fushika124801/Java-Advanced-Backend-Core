@@ -1,6 +1,6 @@
-package epam.com.generator;
+package epam.com;
 
-import epam.com.generator.generator.TemplateGenerator;
+import epam.com.generator.TemplateGenerator;
 
 import java.util.List;
 
