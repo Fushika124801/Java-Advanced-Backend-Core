@@ -17,7 +17,6 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.Console;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -35,12 +34,11 @@ class TemplateGeneratorTest {
   private Console console;
 
   @Spy
-  private String[] emptyArgs;
+  private List<String> emptyParams;
 
   @BeforeEach
   public void init() {
-    emptyArgs = new String[1];
-    when(emptyArgs.length).thenReturn(0);
+    when(emptyParams.isEmpty()).thenReturn(true);
   }
 
   @Test
@@ -50,7 +48,7 @@ class TemplateGeneratorTest {
     String expected = "I wrote you John because Happy New Year";
     when(console.readLine()).thenReturn("title=Happy New Year,who=John");
 
-    String actual = templateGenerator.createTemplate(emptyArgs);
+    String actual = templateGenerator.createTemplate(emptyParams);
 
     assertEquals(expected, actual);
   }
@@ -61,19 +59,20 @@ class TemplateGeneratorTest {
   void createTemplateInConsoleMode_ProvidedWrongPlaceholderValue_ThrowsException(String input) {
     when(console.readLine()).thenReturn(input);
 
-    assertThrows(IllegalArgumentException.class, () -> templateGenerator.createTemplate(emptyArgs));
+    assertThrows(IllegalArgumentException.class,
+        () -> templateGenerator.createTemplate(emptyParams));
   }
 
   @TestFactory
   @Tag("FileModeTest")
   Stream<DynamicTest> createTemplateInFileMode_Ok() {
-    List<String[]> inuputs = Arrays.asList(new String[]{"title=Happy New Year,who=John"},
-        new String[]{"who=John,title=Happy New Year"},
-        new String[]{"title=Happy New Year,who=John,what=test"});
+    List<List<String>> inuputs = List.of(List.of("title=Happy New Year", "who=John"),
+        List.of("who=John", "title=Happy New Year"),
+        List.of("title=Happy New Year", "who=John", "what=test"));
     String expected = "I wrote you John because Happy New Year";
 
     return inuputs.stream().map(
-        inuput -> DynamicTest.dynamicTest("CreateTemplate with params:" + Arrays.toString(inuput),
+        inuput -> DynamicTest.dynamicTest("CreateTemplate with params:" + inuput,
             () -> assertEquals(expected, templateGenerator.createTemplate(inuput))));
 
   }
